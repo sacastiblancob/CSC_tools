@@ -18,13 +18,21 @@ ro = b - csc_matvec(Av,Ar,Ac,x);
 d = ro;
 for t = 1:niter
     Ad = csc_matvec(Av,Ar,Ac,d);
-    alf = (ro'*ro)/(d'*Ad);
+    if d'*Ad==0
+        alf = 0.0;
+    else
+        alf = (ro'*ro)/(d'*Ad);
+    end
     x = x + alf*d;
     if norm(b - csc_matvec(Av,Ar,Ac,x))<tol
         return
     end
     r = ro - alf*Ad;
-    bet = (r'*r)/(ro'*ro);
+    if ro'*ro==0
+        bet = 0.0;
+    else
+        bet = (r'*r)/(ro'*ro);
+    end
     d = r + bet*d;
     ro = r;
 end
