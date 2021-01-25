@@ -26,11 +26,21 @@ function [Pv,Pr,Pc,Qv,Qr,Qc] = csc_preSOR(Av,Ac,Ar,w)
 %
 
 m = length(Ac)-1;
-nzp = m + (length(Av)-m)/2;
+nzp = m;
 if w==1
-    nzq = (length(Av)-m)/2;
+    nzq = 0;
 else
-    nzq = m + (length(Av)-m)/2;
+    nzq = m;
+end
+
+for j=1:m
+    for i=Ac(j):Ac(j+1)-1
+        if Ar(i)<j
+            nzq = nzq + 1;
+        elseif Ar(i)>j
+            nzp = nzp + 1;
+        end
+    end
 end
 
 Qv = zeros(nzq,1);
