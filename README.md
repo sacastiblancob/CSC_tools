@@ -31,6 +31,9 @@ Be aware that for some solvers as Jacobi or SOR(Symmetric Over-Relaxation) you s
 
 ## Folder Contents
 
+Both in ./fortran and ./matlab folders you will find almost the same functions/subroutines (listed below).
+To use the Fortran subroutines you must copy the .f files in your fortran project source code folder, modify accordingly your Makefile (see examples in https://github.com/sacastiblancob/cavity-NS), and to call them, you just need to add the "USE CSC_STORAGE" statement in the declarations section of your fortran script.
+
 ./csc_CG --> Solves the system Ax=b with Conjugate Gradient.
 
 ./csc_diag --> Create a matrix in CSC by diagonals.
