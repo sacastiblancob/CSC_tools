@@ -1,4 +1,4 @@
-function [Pv,Qv,Qc,Qr] = csc_prejacobi(Av,Ar,Ac)
+function [Pv,Qv,Qr,Qc] = csc_prejacobi(Av,Ar,Ac)
 %
 % This function takes the matrix A in CSC storage, and prepares the
 % matrices for solve the system Ax=b with Jacobi iterative method

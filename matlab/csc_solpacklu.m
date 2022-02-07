@@ -1,4 +1,4 @@
-function x = solpacklu_csc(LUv, LUr, LUc, b)
+function x = csc_solpacklu(LUv, LUr, LUc, b)
 % This function compute the forward and backward sustitution for the system
 % LUx = b, where LU should be entered in pack_csc notation, that's it:
 % packLU in Compressed Sparse Column notation.

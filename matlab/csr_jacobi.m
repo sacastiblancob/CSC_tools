@@ -1,4 +1,4 @@
-function [x,t] = csc_jacobi(Av,Ar,Ac,Pv,Qv,Qr,Qc,b,x,niter,tol)
+function [x,t] = csr_jacobi(Av,Ac,Ar,Pv,Qv,Qc,Qr,b,x,niter,tol)
 %Solves the system Ax = b with the Jacobi iterative method.
 %
 % P and Q:
@@ -13,9 +13,9 @@ function [x,t] = csc_jacobi(Av,Ar,Ac,Pv,Qv,Qr,Qc,b,x,niter,tol)
 %                                 U = upper part of A
 %
 % Entries:
-%     Av, Ar, Ac : Components of matrix A in CSC stotage
+%     Av, Ac, Ar : Components of matrix A in CSR stotage
 %     Pv : Vector with the values of D (diagonal of A)
-%     Qv, Qr, Qc : Components of matrix Q in CSC stotage
+%     Qv, Qc, Qr : Components of matrix Q in CSR stotage
 %     b : right hand side vector
 %     x : first guess for the solution of the system
 %     niter : max. number of iterations for solve the system
@@ -28,9 +28,9 @@ function [x,t] = csc_jacobi(Av,Ar,Ac,Pv,Qv,Qr,Qc,b,x,niter,tol)
 
 %loop
 for t=1:niter
-    d = csc_matvec(Qv,Qr,Qc,x) + b;
-    x = d./Pv;
-    if norm(b - csc_matvec(Av,Ar,Ac,x))<tol
+    d = csr_matvec(Qv,Qc,Qr,x) + b;
+    x = d./(Pv');
+    if norm(b - csr_matvec(Av,Ac,Ar,x))<tol
         return
     end
 end

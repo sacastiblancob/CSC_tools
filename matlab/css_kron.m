@@ -1,4 +1,4 @@
-function [Cv,Cr,Cc] = csc_kron(Av,Ar,Ac,Bv,Br,Bc)
+function [Cv,Cr,Cc] = css_kron(Av,Ar,Ac,Bv,Br,Bc)
 %
 % This function computes the kronecker product between A and B with A and B
 % stored in CSC

@@ -152,42 +152,42 @@
 %         bj=1;
 %     end
 % end
-
-%Building difussion-symmetric matrix
-
-Dx=0.25;
-Dy=0.25;
-u=0;
-v=0;
-
-%Discretizacion espacial
-a=4;
-b=4;
-dx=(8/72);
-dy=(8/72);
-
-n=round((a-(-b))/dx+1);
-m=round((a-(-b))/dy+1);
-x=-a:dx:b;
-y=-a:dy:b;
-X=kron(ones(1,m),x);
-Y1=kron(y,ones(1,n));
-Y=Y1(n*m:-1:1);
-MX=reshape(X,m,n)';
-MY=reshape(Y,m,n)';
-
-%Discretizacion temporal
-dt=.025;
-tinicial=1+dt;
-tfinal=10;
-t=tinicial+dt:dt:tfinal;
-
-%Constantes de la ecuacion diferencial computacional
-Sx=(Dx*dt)/(dx^2);
-Sy=(Dy*dt)/(dy^2);
-CFLx=(u*dt)/dx;
-CFLy=(v*dt)/dy;
-CFL = max(CFLx,CFLy);
+% 
+% %Building difussion-symmetric matrix
+% 
+% Dx=0.25;
+% Dy=0.25;
+% u=0;
+% v=0;
+% 
+% %Discretizacion espacial
+% a=4;
+% b=4;
+% dx=(8/72);
+% dy=(8/72);
+% 
+% n=round((a-(-b))/dx+1);
+% m=round((a-(-b))/dy+1);
+% x=-a:dx:b;
+% y=-a:dy:b;
+% X=kron(ones(1,m),x);
+% Y1=kron(y,ones(1,n));
+% Y=Y1(n*m:-1:1);
+% MX=reshape(X,m,n)';
+% MY=reshape(Y,m,n)';
+% 
+% %Discretizacion temporal
+% dt=.025;
+% tinicial=1+dt;
+% tfinal=10;
+% t=tinicial+dt:dt:tfinal;
+% 
+% %Constantes de la ecuacion diferencial computacional
+% Sx=(Dx*dt)/(dx^2);
+% Sy=(Dy*dt)/(dy^2);
+% CFLx=(u*dt)/dx;
+% CFLy=(v*dt)/dy;
+% CFL = max(CFLx,CFLy);
 
 % %Valores de los nodos que estan en la frontera
 % front=[1:n,n+1:n:n*m-2*n+1,2*n:n:n*m-n,n*m-n+1:n*m];
@@ -197,44 +197,44 @@ CFL = max(CFLx,CFLy);
 % frontin=(n*m-2*n+3:n*m-n-2);
 % frontiz=(2*n+2:n:n*m-3*n+2);
 
-%Ensamblaje matriz sistema de ecuaciones para el paso 2 del planteamiento
-%numerico
-ap=(1+2*Sx+2*Sy);
-ax=-Sx;
-ay=-Sy;
-
-K11=diag(ones(n-2,1));
-K12=ax*diag(ones(n-3,1),1)+ax*diag(ones(n-3,1),-1)+ap*diag(ones(n-2,1));
-K21=diag(ones(n-3,1),1)+diag(ones(n-3,1),-1);
-K22=ay*diag(ones(n-2,1));
-K1=kron(K11,K12);
-K2=kron(K21,K22);
-K = K1 + K2;
-
-[K11v,K11r,K11c] = csc_diag(ones(n-2,1),0);
-h1 = [ax*ones(n-2,1) ap*ones(n-2,1) ax*ones(n-2,1)];
-d1 = [-1 0 1];
-[K12v,K12r,K12c] = csc_diag(h1,d1);
-h2 = [ones(n-3,1) ones(n-3,1)];
-d2 = [-1 1];
-[K21v,K21r,K21c] = csc_diag(h2,d2);
-[K22v,K22r,K22c] = csc_diag(ay*ones(n-2,1),0);
-
-[K1v,K1r,K1c] = csc_kron(K11v,K11r,K11c,K12v,K12r,K12c);
-[K2v,K2r,K2c] = csc_kron(K21v,K21r,K21c,K22v,K22r,K22c);
-
-[Kv,Kr,Kc] = csc_sum(K1v,K1r,K1c,K2v,K2r,K2c);
-clearvars K11v K11r K11c K12v K12r K12c K21v K21r K21c K22v K22r K22c K1v K1r K1c K2v K2r K2c
-
-caux = ones(length(Kc)-1,1);
-% A = [6 0 1 2 1; 0 4 0 0 -2;1 0 6 -1 0; 2 0 -1 5 0;1 -2 0 0 5];
-% b = [1;1;1;1;1];
-% %A = [2 1 0; 1 3 1; 0 1 1];
-% %b = [1;2;3];
-% [Av,Ar,Ac] = full2csc(A);
-x = caux;
-xo = x;
-c = K\caux;
+% %Ensamblaje matriz sistema de ecuaciones para el paso 2 del planteamiento
+% %numerico
+% ap=(1+2*Sx+2*Sy);
+% ax=-Sx;
+% ay=-Sy;
+% 
+% K11=diag(ones(n-2,1));
+% K12=ax*diag(ones(n-3,1),1)+ax*diag(ones(n-3,1),-1)+ap*diag(ones(n-2,1));
+% K21=diag(ones(n-3,1),1)+diag(ones(n-3,1),-1);
+% K22=ay*diag(ones(n-2,1));
+% K1=kron(K11,K12);
+% K2=kron(K21,K22);
+% K = K1 + K2;
+% 
+% [K11v,K11r,K11c] = csc_diag(ones(n-2,1),0);
+% h1 = [ax*ones(n-2,1) ap*ones(n-2,1) ax*ones(n-2,1)];
+% d1 = [-1 0 1];
+% [K12v,K12r,K12c] = csc_diag(h1,d1);
+% h2 = [ones(n-3,1) ones(n-3,1)];
+% d2 = [-1 1];
+% [K21v,K21r,K21c] = csc_diag(h2,d2);
+% [K22v,K22r,K22c] = csc_diag(ay*ones(n-2,1),0);
+% 
+% [K1v,K1r,K1c] = csc_kron(K11v,K11r,K11c,K12v,K12r,K12c);
+% [K2v,K2r,K2c] = csc_kron(K21v,K21r,K21c,K22v,K22r,K22c);
+% 
+% [Kv,Kr,Kc] = csc_sum(K1v,K1r,K1c,K2v,K2r,K2c);
+% clearvars K11v K11r K11c K12v K12r K12c K21v K21r K21c K22v K22r K22c K1v K1r K1c K2v K2r K2c
+% 
+% caux = ones(length(Kc)-1,1);
+% % A = [6 0 1 2 1; 0 4 0 0 -2;1 0 6 -1 0; 2 0 -1 5 0;1 -2 0 0 5];
+% % b = [1;1;1;1;1];
+% % %A = [2 1 0; 1 3 1; 0 1 1];
+% % %b = [1;2;3];
+% % [Av,Ar,Ac] = full2csc(A);
+% x = caux;
+% xo = x;
+% c = K\caux;
 
 % %Jacobi
 % [Pv,Qv,Qc,Qr] = csc_prejacobi(Kv,Kr,Kc);
@@ -657,6 +657,179 @@ c = K\caux;
 %     ro = r;
 %     zo = z;
 % end
+
+% %matmul and transposition
+% A = [0 0 2 0 -1 0;4 0 3 3 7 0;-2 0 0 0 0 -1; 0 1 0 1 0 0];
+% B = [1 0 -1 0 0 5;0 0 0 0 -2 0;4 6 0 2 0 0;0 -1 1 0 0 0];
+% [Av,Ac,Ar] = full2csr(A);
+% [Bv,Bc,Br] = full2csr(B);
+% [Bv,Bc,Br] = css_trans(Bv,Bc,Br);
+% 
+% [Cc,Cr] = csr_symmatmul(Ac,Ar,Bc,Br);
+% [Cc,Cr] = css_symtrans(Cc,Cr);
+% [Cc,Cr] = css_symtrans(Cc,Cr);
+% [Cv,Cc,Cr] = csr_nummatmul(Av,Ac,Ar,Bv,Bc,Br,Cc,Cr);
+
+% %Kronecker product
+% A = [1 1 0; 0 1 0;0 0 2];
+% B = [1 2; 3 4];
+% C = kron(A,B);
+% [Acv,Acr,Acc] = full2csc(A);
+% [Bcv,Bcr,Bcc] = full2csc(B);
+% [Arv,Arc,Arr] = full2csr(A);
+% [Brv,Brc,Brr] = full2csr(B);
+% [Ccv,Ccr,Ccc] = css_kron(Acv,Acr,Acc,Bcv,Bcr,Bcc);
+% [Crv,Crc,Crr] = css_kron(Arv,Arc,Arr,Brv,Brc,Brr);
+% % csc_kron works either for CSC and CSR
+
+% % csr Jacobi
+% A = [1 0 0; 0 2 0;0 0 3];
+% B = [3 1; 1 4];
+% C = kron(A,B);
+% [Cv,Cc,Cr] = full2csr(C);
+% [Pv,Qv,Qc,Qr] = csr_prejacobi(Cv,Cc,Cr);
+% b = ones(6,1);
+% % d = csr_matvec(Cv,Cc,Cr,b);
+% niter = 20;
+% tol = 1e-8;
+% [xr,tr] = csr_jacobi(Cv,Cc,Cr,Pv,Qv,Qc,Qr,b,b,niter,tol);
+% 
+% [Ccv,Ccr,Ccc] = full2csc(C);
+% [Pcv,Qcv,Qcr,Qcc] = csc_prejacobi(Ccv,Ccr,Ccc);
+% % d = csc_matvec(Ccv,Ccr,Ccc,b)
+% [xc,tc] = csc_jacobi(Ccv,Ccr,Ccc,Pcv,Qcv,Qcr,Qcc,b,b,niter,tol);
+% 
+% x = C\b;
+
+% % csr SOR
+% Aa = [1 0 0; 0 2 0;0 0 3];
+% Ab = [3 1; 1 4];
+% A = kron(Aa,Ab);
+% A(3,1) = 1;
+% A(3,2) = 1;
+% A(4,1) = 1;
+% [Av,Ac,Ar] = full2csr(A);
+% [Acv,Acr,Acc] = full2csc(A);
+% w = 1;
+% [Pv,Pc,Pr,Qv,Qc,Qr] = csr_preSOR(Av,Ac,Ar,w);
+% [Pcv,Pcr,Pcc,Qcv,Qcr,Qcc] = csc_preSOR(Acv,Acc,Acr,w);
+% % b = ones(6,1);
+% b = [1;2;3;4;5;6];
+% niter = 20;
+% tol = 1e-8;
+% % x = A\b;
+% [xr,tr] = csr_SOR(Av,Ar,Ac,Pv,Pr,Pc,Qv,Qr,Qc,b,b,niter,tol);
+% [xc,tc] = csc_SOR(Acv,Acr,Acc,Pcv,Pcr,Pcc,Qcv,Qcr,Qcc,b,b,niter,tol);
+
+% % %csr Conjugate Gradient
+% Aa = [1 0 0; 0 2 0;0 0 3];
+% Ab = [3 1; 1 4];
+% A = kron(Aa,Ab);
+% [Av,Ac,Ar] = full2csr(A);
+% b = [1;2;3;4;5;6];
+% x = A\b;
+% niter = 20;
+% tol = 1e-8;
+% [xr,t] = csr_CG(Av,Ac,Ar,b,b,niter,tol);
+% [xrp,tp] = csr_DPCG(Av,Ac,Ar,b,b,niter,tol);
+
+% % %Projection Methods Experiments (Gauss-Seidel)
+% Aa = [1 0 0; 0 2 0;0 0 3];
+% Ab = [3 1; 1 4];
+% A = kron(Aa,Ab);
+% [Av,Ac,Ar] = full2csr(A);
+% [Pv,Pc,Pr,Qv,Qc,Qr] = csr_preSOR(Av,Ac,Ar,1); %Gauss-Seidel
+% b = [1;1;1;1;1;1];
+% x0 = [0;1;0;0;0;0];
+% niter = 20;
+% tol = 1e-8;
+% xm = A\b;
+% 
+% n = length(Ar)-1;
+% ro = b - csr_matvec(Av,Ac,Ar,x0);
+% 
+% % loop
+% % for t = 1:niter
+%     xg = csr_matvec(Qv,Qc,Qr,x0) + b;
+%     for i=1:n
+%         j = Pr(i):Pr(i+1)-Pr(1);
+%         if length(j)==1
+%             xg(i) = xg(i)/Pv(j(length(j)));
+%         else
+%             xg(i) = (xg(i) - Pv(j(1:length(j)-1))*xg(Pc(j(1:length(j)-1))))/Pv(j(length(j)));
+%         end
+%     end
+%     rnew = b - csr_matvec(Av,Ac,Ar,xg);
+%     xg'*rnew
+%     d = xg - x0;
+%     rnew'*d
+%     wo = ro - csr_matvec(Av,Ac,Ar,d);
+%     d'*wo
+%     x0 = xg;
+% %     if norm(b - csr_matvec(Av,Ac,Ar,x))<tol
+% %         return
+% %     end
+% % end
+
+%Projection Methods Experiments (This is Gauss-Seidel in Projection Form)
+h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
+A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
+[Av,Ac,Ar] = full2csr(A);
+b = ones(length(A),1);
+x0 = ones(length(A),1);
+niter = 20;
+tol = 1e-8;
+xm = A\b;
+% err = zeros(1,100);
+normr = zeros(1,length(A));
+V = A*b;
+V = V./(norm(V));
+
+for i = 1:length(A)
+    %space K
+    %
+%     V=zeros(length(A),i);
+%     for j=1:i
+%         V(j,j) = 1;
+%     end
+%     V(1) = 1;
+    %
+%     V(1 + mod(i,6),2) = 1;
+    %
+%     V = ones(6,1);
+%     V(1 + mod(i-1,6),1) = 0;
+    %
+
+%     space L
+%     W=A*V;    %Petrov-Galerkin
+    W=V;        %Galerkin
+    
+    r = b - csr_matvec(Av,Ac,Ar,x0);
+    WAV = W'*A*V;
+    y = inv(WAV)*W'*r;
+    xg = x0 + V*y;
+    d = xg - x0;
+    w0 = r - A*d;
+    ort = (W'*w0)'
+    normr(i) = norm(b - csr_matvec(Av,Ac,Ar,xg));
+    x0 = xg;
+%     err(i) = norm(xm-x0);
+
+%
+    Va = A*V(:,end);
+    Va = Va./(norm(Va));
+    V = [V Va];
+% V = [V(:,end) Va];
+
+end
+% plot(err)
+% ylim([0 3])
+%of course the selection of basis for K and L are way important for the
+%convergence!!!
+
+
+
+
 
 
 
