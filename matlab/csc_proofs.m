@@ -771,66 +771,115 @@
 % %     end
 % % end
 
-%Projection Methods Experiments (This is Gauss-Seidel in Projection Form)
-h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
-A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
-[Av,Ac,Ar] = full2csr(A);
-b = ones(length(A),1);
-x0 = ones(length(A),1);
-niter = 20;
-tol = 1e-8;
-xm = A\b;
-% err = zeros(1,100);
-normr = zeros(1,length(A));
-V = A*b;
-V = V./(norm(V));
-
-for i = 1:length(A)
-    %space K
-    %
-%     V=zeros(length(A),i);
-%     for j=1:i
-%         V(j,j) = 1;
-%     end
-%     V(1) = 1;
-    %
-%     V(1 + mod(i,6),2) = 1;
-    %
-%     V = ones(6,1);
-%     V(1 + mod(i-1,6),1) = 0;
-    %
-
-%     space L
+% %Projection Methods Experiments (This is Gauss-Seidel in Projection Form)
+% h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
+% A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
+% [Av,Ac,Ar] = full2csr(A);
+% b = ones(length(A),1);
+% x0 = ones(length(A),1);
+% niter = 20;
+% tol = 1e-8;
+% xm = A\b;
+% % err = zeros(1,100);
+% normr = zeros(1,length(A));
+% V = A*b;
+% V = V./(norm(V));
+% 
+% for i = 1:length(A)
+%     r = b - csr_matvec(Av,Ac,Ar,x0);
+%     %space K
+%     %
+% %     V=zeros(length(A),i);
+% %     for j=1:i
+% %         V(j,j) = 1;
+% %     end
+% %     V(1) = 1;
+%     %
+% %     V(1 + mod(i,6),2) = 1;
+%     %
+% %     V = ones(6,1);
+% %     V(1 + mod(i-1,6),1) = 0;
+%     %
+%     V = [r A*r A*A*r];    %krylov subspace
+% 
+% %     space L
 %     W=A*V;    %Petrov-Galerkin
-    W=V;        %Galerkin
-    
-    r = b - csr_matvec(Av,Ac,Ar,x0);
-    WAV = W'*A*V;
-    y = inv(WAV)*W'*r;
-    xg = x0 + V*y;
-    d = xg - x0;
-    w0 = r - A*d;
-    ort = (W'*w0)'
-    normr(i) = norm(b - csr_matvec(Av,Ac,Ar,xg));
-    x0 = xg;
-%     err(i) = norm(xm-x0);
+% %     W=V;        %Galerkin
+%     
+%     WAV = W'*A*V;
+%     y = inv(WAV)*W'*r;
+%     xg = x0 + V*y;
+%     d = xg - x0;
+%     w0 = r - A*d;
+%     ort = (W'*w0)'
+%     normr(i) = norm(b - csr_matvec(Av,Ac,Ar,xg));
+%     x0 = xg;
+% %     err(i) = norm(xm-x0);
+% 
+% %
+% %     Va = A*V(:,end);
+% %     Va = Va./(norm(Va));
+% %     V = [V Va];
+% % V = [V(:,end) Va];
+% 
+% end
+% % plot(err)
+% % ylim([0 3])
+% %of course the selection of basis for K and L are way important for the
+% %convergence!!!
 
-%
-    Va = A*V(:,end);
-    Va = Va./(norm(Va));
-    V = [V Va];
-% V = [V(:,end) Va];
+% % Full Orthogonalization Method (FOM) with Modified Gram-Schmidt in CSC
+% h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
+% A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
+% [Av,Ar,Ac] = full2csc(A);
+% b = ones(length(A),1);
+% x0 = ones(length(A),1);
+% xe = A\b;
+% ni = n;
+% % E = zeros(ni,1);
+% 
+% % for i=1:ni
+%     r0 = b - csc_matvec(Av,Ar,Ac,x0);
+%     bet = norm(r0);
+%     v = r0/bet;
+%     m = 6;
+%     [V,H] = arnoldi_MGS_csc(Av,Ar,Ac,v,m,eps(1E6));
+%     bv = zeros(m,1);
+%     bv(1) = bet;
+%     y = inv(H)*bv;   %This system H*y=bv should be computed with Givens Rotations instead
+%     x0 = x0 + V*y;
+% %     E(i) = norm(x0-xe);
+% % end
+% % semilogy(E)
+% % As it becomes expensive when m -> n, the restarted version is proposed.
+% % In which m is set fixed or expanded up to a m_max
 
-end
-% plot(err)
-% ylim([0 3])
-%of course the selection of basis for K and L are way important for the
-%convergence!!!
-
-
-
-
-
+% % Restarded-FOM with Modified Gram-Schmidt in CSC
+% h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
+% A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
+% [Av,Ar,Ac] = full2csc(A);
+% n = length(A);
+% b = ones(length(A),1);
+% x0 = ones(length(A),1);
+% xe = A\b;
+% m = 3;
+% ni = n;
+% E = zeros(ni,1);
+% 
+% for i=1:ni
+%     r0 = b - csc_matvec(Av,Ar,Ac,x0);
+%     bet = norm(r0);
+%     v = r0/bet;
+%     [V,H] = arnoldi_MGS_csc(Av,Ar,Ac,v,m,eps(1E6));
+%     bv = zeros(m,1);
+%     bv(1) = bet;
+%     y = inv(H)*bv;   %This system H*y=bv should be computed with Givens Rotations instead
+%     x0 = x0 + V*y;
+%     E(i) = norm(x0-xe);
+% end
+% semilogy(E2)
+% hold on
+% semilogy(E3)
 
 
 
