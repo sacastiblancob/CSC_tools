@@ -1,5 +1,6 @@
-# Compressed Sparse Column Tools 
-> A series of tools developed to storage and manipulate matrices with CSC storage - MATLAB
+# Compressed Sparse Column Tools / Now Also Compressed Sparse Row (and general CS)
+> A series of tools developed to storage and manipulate matrices with CSC and CSR storage - MATLAB
+Some are implemented in Fortran as well (I am working for the ones that are left).
 
 ## Installation
 
@@ -11,11 +12,12 @@ git clone https://github.com/sacastiblancob/CSC_tools .
 
 ## Usage example
 
-To make some linear algebra you just need to use the CSC_tools.
+To make some linear algebra you just need to use the CSS_tools (Compressed Sparse Storage Tools).
 
-If you want to have a regular matlab matriz A in CSC storage, you can use the function full2csc in the next way:
+If you want to have a regular matlab matriz A in CSC storage or CSR storage, you can use the function full2csc in the next way:
 
 [Av,Ar,Ac] = full2csc(A)
+[Av,Ac,Ar] = full2csr(A)
 
 But in fact that is not the correct way to do it, if you are making CFD, you are going to be able to come to your matrices through build them by diagonals and Kronecker products. Therefore, you can use tools as csc_kron or csc_diag to build matrices rather than convert regular matlab ones through full2csc. In fact, I strongly recommend to you to avoid the use of full2csc.
 
@@ -25,7 +27,13 @@ All the functions have a brief (sometimes detail) explanation of what that tool 
 
 Where Av have the values of the entries of A, Ar have the row indices of those entries, and Ac have the indices where every column start and the number of columns + 1 in the last position (because is CSC storage). And, for example, if you want to sum two matrices A+B=C (with csc_sum), it is intuitive to think that the entries will be Av, Ar, Ac, Bv, Br, Bc; and the outputs Cv, Cr, Cc. As it is. 
 
-There are some functions that may not work as fast as I want to, but despite that, if you want to use csc_packlu to compute the LU decomposition of a matrix A, you should be aware of the structure of that matrix A and the structure of the result LU, because sometimes is more useful to have LU in full storage than in CSC storage. That depends on the application.
+Or in CSR storage:
+
+ Av, Ac, Ar
+
+Where Av have the values of the entries of A, Ac have the column indices of those entries, and Ar have the indices where every row start and the number of columns + 1 in the last position (because is CSR storage). And, for example, if you want to sum two matrices A+B=C (with csr_symsum/csr_numsum), it is intuitive to think that the entries will be Av, Ac, Ar, Bv, Bc, Br; and the outputs Cv, Cc, Cr. As it is. 
+
+There are some functions that may not work as fast as I want to, but despite that, if you want to use csc_packlu to compute the LU decomposition of a matrix A, you should be aware of the structure of that matrix A and the structure of the result LU, because sometimes is more useful to have LU in full storage than in CSC storage. That depends on the application. In fact, this algorithms (Direct Solvers) are not implemented yet in CSR storage, being in CSC badly-efficient.
 
 Be aware that for some solvers as Jacobi or SOR(Symmetric Over-Relaxation) you should use csc_prejacobi or csc_preSOR to prepare the entries for the actual solvers, which are csc_jacobi and csc_SOR. Those things are not together in the same function, because mostly you should solve a linear system of equations (sometimes several of them) every time step in a CFD simulation, so it is way better to compute csc_preSOR and csc_prejacobi before go into time loop.
 
