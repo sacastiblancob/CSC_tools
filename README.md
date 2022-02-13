@@ -34,37 +34,53 @@ Be aware that for some solvers as Jacobi or SOR(Symmetric Over-Relaxation) you s
 Both in ./fortran and ./matlab folders you will find almost the same functions/subroutines (listed below).
 To use the Fortran subroutines you must copy the .f files in your fortran project source code folder, modify accordingly your Makefile (see examples in https://github.com/sacastiblancob/cavity-NS), and to call them, you just need to add the "USE CSC_STORAGE" statement in the declarations section of your fortran script.
 
-./csc_CG --> Solves the system Ax=b with Conjugate Gradient.
+./csc_CG ; csr_CG --> Solves the system Ax=b with Conjugate Gradient.
 
-./csc_diag --> Create a matrix in CSC by diagonals.
+./csc_diag ; csr_diag --> Create a matrix in CSC by diagonals.
 
-./csc_DPCG --> Solves the system Ax=b with Diagonal Preconditioned Conjugate Gradient method.
+./csc_DPCG ; csr_DPCG --> Solves the system Ax=b with Diagonal Preconditioned Conjugate Gradient method.
 
-./csc_jacobi --> Solves the system Ax=b with Jacobi Iterative method (you should run csc_prejacobi before going into it)-
+./csc_jacobi ; csr_jacobi --> Solves the system Ax=b with Jacobi Iterative method (you should run csc_prejacobi before going into it)-
 
-./csc_kron --> Computes the kronecker product between two matrices stored with this CSC metodology.
+./css_kron --> Computes the kronecker product between two matrices stored with this Compressed Storage metodology (either CSC or CSR).
 
-./csc_matmul --> Computes the matrix by matrix multiplication in CSC.
+./csc_matmul --> Computes the matrix by matrix multiplication in CSC/CSR.
 
-./csc_matvec --> Computes the matrix by vector multiplication in CSC.
+./csr_symmatmul ; csr_nummatmul --> Computes the matrix by matrix multiplication in CSR (symbolically and/or numerically).
 
-./csc_prejacobi --> Prepares everything for Jacobi Iterative solver.
+./csc_matvec ; csr_matvec --> Computes the matrix by vector multiplication in CSC.
 
-./csc_preSOR --> Prepares everything for Symmetric Over-Relaxation Iterative solver.
+./csc_prejacobi ; csr_prejacobi --> Prepares everything for Jacobi Iterative solver.
+
+./csc_preSOR ; csr_presor --> Prepares everything for Symmetric Over-Relaxation Iterative solver.
 
 ./csc_profs --> Script for testing.
 
-./csc_SOR --> Solves the system Ax=b with Symmetric Over-Relaxation Iterative solver (you should run csc_preSOR before going into it).
+./csc_SOR ; csr_SOR --> Solves the system Ax=b with Symmetric Over-Relaxation Iterative solver (you should run csc_preSOR before going into it).
 
 ./csc_spy --> Plots the sparsity of your matrix in CSC (the same as standar matlab spy()).
 
-./csc_sum --> Computes the sum between two matrices in CSC.
+./csc_sum --> Computes the sum between two matrices in CSC (inneficient).
 
-./csc_trans --> Computes the transpose of a matrix in CSC.
+./csr_symsum ; csr_numsum --> Computes the sum between two matrices in CSR (symbolically and/or numerically).
 
-./csc_packlu --> Computes the LU decomposition in packed way.
+./css_trans ; css_symtrans --> Computes the transpose of a matrix in Compressed Storage (symbolically and/or numerically).
+
+./css_tperm --> Computes the transpose of matrix with permutations (apply it double for full permutations of row-columns).
+
+./csc_packlu --> Computes the LU decomposition in packed way (inneficient).
 
 ./csc_solpacklu --> Solves the system Ax=b with the result of LU decomposition.
+
+./csc_gmres ; csr_gmres --> Solves the system Ax=b with restarted Generalized Minimal Residual Method (restarted-GMRES).
+
+./csc_bicgstab ; csr_bicgstab --> Solves the system Ax=b with Biconjugate Gradient Stabilized Method.
+
+./housholderv --> Computes mirror vector for Householder Transformations (Golub & Van Loan algorithm).
+
+./csc_arnoldi_householder ; csr_householder_arnoldi --> Computes Arnoldi's Method with Householder.
+
+./csc_arnoldi_MGS ; csr_householder_MGS --> Computes Arnoldi's Method with Modified Gram-Schmidt.
 
 ./README.md --> You are standing here
 

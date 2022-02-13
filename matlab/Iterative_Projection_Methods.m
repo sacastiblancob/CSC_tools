@@ -61,8 +61,9 @@
 %Steepest Descend (s) ; Minimal Residual (m) ; Residual Norm SD (r)
 
 %Matrix A, b, and exact solution
-A = [3 -4.2;1 3];
-b = A*[1;1];
+A = [2 1;1 1];
+% A = [2 -5;1 1];
+b = [0;-1];
 xe = A\b;  %exact solution
 
 %Initial guess
@@ -193,14 +194,18 @@ end
 siz = size(X);
 Fs = zeros(siz);
 Fm = zeros(siz);
+F = zeros(siz);
+% F2 = zeros(siz);
 
 %F which minimizes Steepest Descend
 for i=1:siz(1)
     for j=1:siz(2)
         Fs(i,j) = (A*([X(i,j);Y(i,j)]-xe))'*([X(i,j);Y(i,j)]-xe);
         Fm(i,j) = (b - A*([X(i,j);Y(i,j)]))'*(b - A*([X(i,j);Y(i,j)]));
+        F(i,j) = 0.5*([X(i,j) Y(i,j)]*(A*([X(i,j);Y(i,j)]))) - b'*[X(i,j);Y(i,j)];
     end
 end
+F2 = Fm - norm(b);
 
 %
 % Plot
@@ -221,11 +226,14 @@ hold on
 figure(2)
 cFs = [0.7 0.7 0.7];
 contour(X,Y,Fs,'--','Levels',max(max(Fs))/50)
+% contour(X,Y,F,'--','Levels',max(max(F))/50)
+% contour(X,Y,F2,'*','Levels',max(max(F2))/50)
 colormap(cFs)
 axis equal
 figure(3)
 cFm = [0.3 0.3 0.3];
 contour(X,Y,Fm,'-.','Levels',max(max(Fm))/50)
+% contour(X,Y,F2,'*','Levels',max(max(F2))/50)
 colormap(cFm)
 axis equal
 % figure(4)
@@ -278,7 +286,13 @@ for t=1:ni
 
 end
 
-
+% figure(5)
+% subplot(3,1,1)
+% surf(X,Y,Fs)
+% subplot(3,1,2)
+% surf(X,Y,F2)
+% subplot(3,1,3)
+% surf(X,Y,F)
 
 
 

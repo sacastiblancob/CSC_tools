@@ -828,58 +828,7 @@
 % %of course the selection of basis for K and L are way important for the
 % %convergence!!!
 
-% % Full Orthogonalization Method (FOM) with Modified Gram-Schmidt in CSC
-% h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
-% A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
-% [Av,Ar,Ac] = full2csc(A);
-% b = ones(length(A),1);
-% x0 = ones(length(A),1);
-% xe = A\b;
-% ni = n;
-% % E = zeros(ni,1);
-% 
-% % for i=1:ni
-%     r0 = b - csc_matvec(Av,Ar,Ac,x0);
-%     bet = norm(r0);
-%     v = r0/bet;
-%     m = 6;
-%     [V,H] = arnoldi_MGS_csc(Av,Ar,Ac,v,m,eps(1E6));
-%     bv = zeros(m,1);
-%     bv(1) = bet;
-%     y = inv(H)*bv;   %This system H*y=bv should be computed with Givens Rotations instead
-%     x0 = x0 + V*y;
-% %     E(i) = norm(x0-xe);
-% % end
-% % semilogy(E)
-% % As it becomes expensive when m -> n, the restarted version is proposed.
-% % In which m is set fixed or expanded up to a m_max
 
-% % Restarded-FOM with Modified Gram-Schmidt in CSC
-% h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
-% A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
-% [Av,Ar,Ac] = full2csc(A);
-% n = length(A);
-% b = ones(length(A),1);
-% x0 = ones(length(A),1);
-% xe = A\b;
-% m = 3;
-% ni = n;
-% E = zeros(ni,1);
-% 
-% for i=1:ni
-%     r0 = b - csc_matvec(Av,Ar,Ac,x0);
-%     bet = norm(r0);
-%     v = r0/bet;
-%     [V,H] = arnoldi_MGS_csc(Av,Ar,Ac,v,m,eps(1E6));
-%     bv = zeros(m,1);
-%     bv(1) = bet;
-%     y = inv(H)*bv;   %This system H*y=bv should be computed with Givens Rotations instead
-%     x0 = x0 + V*y;
-%     E(i) = norm(x0-xe);
-% end
-% semilogy(E2)
-% hold on
-% semilogy(E3)
 
 
 

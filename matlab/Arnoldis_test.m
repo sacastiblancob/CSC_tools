@@ -146,78 +146,78 @@
 % QH = Q*He;
 % A2 = Q*He*Q';
 
-% %Arnoldi-Householder (Walker 1988) %LITE
-h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
-A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
-v = [1;2;3;4;5;6];
-v = v/norm(v);
-z = v;
-n = length(v);
-m = 6;
-H = zeros(m+1,m+1);
-Q = zeros(n,m);
-
-W = zeros(n,m+1);
-b = zeros(1,m+1);
-[W(:,1),b(1)] = householderv(z);
-for j=1:m+1
-
-    %Computing H
-    H(1:j-1,j) = z(1:j-1);
-    
-    if j<=m  %this if presumibly can be removed, if Q dimensions are (n,m+1)
-        
-        H(j,j) = z(j) - b(j)*W(j,j)*(z(j:n)'*W(j:n,j));
-        %Computing v_j, stored in j_th column of Q
-        % vj = P1*P2*...*PJ*ej
-        % i.e. succesive outer products by right side
-        q = zeros(n,1);
-        q(j) = 1;
-        for k = j:-1:1
-            bqTw = b(k)*(q(k:n)'*W(k:n,k));
-            for i = k:n
-                Q(i,j) = q(i) - W(i,k)*bqTw;
-            end
-            q = Q(:,j);
-        end
-
-        %Computing z_j+1
-        % z_j+1 = Pj*Pj-1*...*P2*P1*(A*v_j)
-        % i.e succesive outer products by left side
-        zaux = A*Q(:,j);
-        for k = 1:j
-            bzTw = b(k)*(zaux(k:n)'*W(k:n,k));
-            for i = k:n
-                z(i) = zaux(i) - W(i,k)*bzTw;
-            end
-            zaux = z;
-        end
-
-        %Computing new Householder vector (W(j+1)) and new beta
-        [W(j+1:end,j+1),b(j+1)] = householderv(z(j+1:end));
-
-    end
-end
-
-%Hessemberg Matrix (He) similar to A through Q*He*Q' when computed
-%completely, i.e., when m=n
-He = H(1:m,2:m+1);
-
-%Proof for the case of Householder_Arnoldi
-% H = [h0,h1,h2,...,hm]   -> n x (m+1)
-% Q = [v1,v2,v3,...,vm]   -> n x m
-%
-% Hessemberg matrix of Arnoldi's
-% He = [h1,h2,h3,...,hm]  -> n x m
-% Proof is: A*Q = Q*He
-% This proof is only visible when m = n !!!
-% Because by the way it is storing things, for m < n a little modification
-% must be done, in orther to store all needed information
-%
-AQ = A*Q;
-QH = Q*He;
-A2 = Q*He*Q';
-
+% % %Arnoldi-Householder (Walker 1988) %LITE
+% h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
+% A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
+% v = [1;2;3;4;5;6];
+% % v = v/norm(v);
+% z = v;
+% n = length(v);
+% m = 3;
+% H = zeros(m+1,m+1);
+% Q = zeros(n,m);
+% 
+% W = zeros(n,m+1);
+% b = zeros(1,m+1);
+% [W(:,1),b(1)] = householderv(z);
+% for j=1:m+1
+% 
+%     %Computing H
+%     H(1:j-1,j) = z(1:j-1);
+%     
+%     if j<=m  %this if presumibly can be removed, if Q dimensions are (n,m+1)
+%         
+%         H(j,j) = z(j) - b(j)*(z(j:n)'*W(j:n,j));
+%         %Computing v_j, stored in j_th column of Q
+%         % vj = P1*P2*...*PJ*ej
+%         % i.e. succesive outer products by right side
+%         q = zeros(n,1);
+%         q(j) = 1;
+%         for k = j:-1:1
+%             bqTw = b(k)*(q(k:n)'*W(k:n,k));
+%             for i = k:n
+%                 Q(i,j) = q(i) - W(i,k)*bqTw;
+%             end
+%             q = Q(:,j);
+%         end
+% 
+%         %Computing z_j+1
+%         % z_j+1 = Pj*Pj-1*...*P2*P1*(A*v_j)
+%         % i.e succesive outer products by left side
+%         zaux = A*Q(:,j);
+%         for k = 1:j
+%             bzTw = b(k)*(zaux(k:n)'*W(k:n,k));
+%             for i = k:n
+%                 z(i) = zaux(i) - W(i,k)*bzTw;
+%             end
+%             zaux = z;
+%         end
+% 
+%         %Computing new Householder vector (W(j+1)) and new beta
+%         [W(j+1:end,j+1),b(j+1)] = householderv(z(j+1:end));
+% 
+%     end
+% end
+% 
+% %Hessemberg Matrix (He) similar to A through Q*He*Q' when computed
+% %completely, i.e., when m=n
+% He = H(1:m,2:m+1);
+% 
+% %Proof for the case of Householder_Arnoldi
+% % H = [h0,h1,h2,...,hm]   -> n x (m+1)
+% % Q = [v1,v2,v3,...,vm]   -> n x m
+% %
+% % Hessemberg matrix of Arnoldi's
+% % He = [h1,h2,h3,...,hm]  -> n x m
+% % Proof is: A*Q = Q*He
+% % This proof is only visible when m = n !!!
+% % Because by the way it is storing things, for m < n a little modification
+% % must be done, in orther to store all needed information
+% %
+% AQ = A*Q;
+% QH = Q*He;
+% A2 = Q*He*Q';
+% 
 % %
 % % Outer products and related things
 % %
@@ -234,7 +234,57 @@ A2 = Q*He*Q';
 % end
 % PT = P*t;
     
-
+% Arnoldi Householder with optimized storage
+h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];
+A = diag(h(1:5,1),-1) + diag(h(:,2),0) + diag(h(1:5,3),1);
+[Av,Ar,Ac] = full2csc(A);
+v = [1;2;3;4;5;6];
+m = 3;
+[WH,b] = csc_arnoldi_householder(Av,Ar,Ac,v,m);
+% n = length(v);
+% z = v;
+% WH = zeros(n+1,m+1);
+% b = zeros(1,m+1);
+% [WH(2:n+1,1),b(1)] = householderv(z);
+% 
+% for j=1:m+1
+% 
+%     %Computing H
+%     WH(1:j-1,j) = z(1:j-1);
+%     WH(j,j) = z(j) - b(j)*(z(j:n)'*WH(j+1:n+1,j));
+%     
+%     if j<=m  %this if presumibly can be removed, if Q dimensions are (n,m+1)
+%         
+%         %Computing v_j, stored in j_th column of Q
+%         % vj = P1*P2*...*PJ*ej
+%         % i.e. succesive outer products by right side
+%         v = zeros(n,1);
+%         q = v;
+%         q(j) = 1;
+%         for k = j:-1:1
+%             bqTw = b(k)*(q(k:n)'*WH(k+1:n+1,k));
+%             for i = k:n
+%                 v(i) = q(i) - WH(i+1,k)*bqTw;
+%             end
+%             q = v;
+%         end
+% 
+%         %Computing z_j+1
+%         % z_j+1 = Pj*Pj-1*...*P2*P1*(A*v_j)
+%         % i.e succesive outer products by left side
+%         zaux = csc_matvec(Av,Ar,Ac,v);
+%         for k = 1:j
+%             bzTw = b(k)*(zaux(k:n)'*WH(k+1:n+1,k));
+%             for i = k:n
+%                 z(i) = zaux(i) - WH(i+1,k)*bzTw;
+%             end
+%             zaux = z;
+%         end
+% 
+%         %Computing new Householder vector (W(j+1)) and new beta
+%         [WH(j+2:n+1,j+1),b(j+1)] = householderv(z(j+1:end));
+%     end
+% end
 
 
 
