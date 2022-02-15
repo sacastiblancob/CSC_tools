@@ -1,4 +1,4 @@
-function [LUv,LUr,LUc] = packlu_csc(Av,Ar,Ac)
+function [LUv,LUr,LUc] = csc_packlu(Av,Ar,Ac)
 %Function for compute the packed-LU decomposition for a matriz A stored in
 %CSC (Compressed Sparse Column, beggining counting in 1 not in 0)
 %Entries:

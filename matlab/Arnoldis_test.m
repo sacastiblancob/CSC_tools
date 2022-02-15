@@ -221,18 +221,18 @@
 % %
 % % Outer products and related things
 % %
-% v = [1;2;3;4;5;6];
-% v = v/norm(v);
-% z = v;
-% t = ones(length(z),1);
-% [w,beta] = householderv(z);
-% P = eye(length(z)) - beta*(w*w');
-% Pt = zeros(length(z),1);
-% btTw = beta*(t'*w);
-% for i=1:length(z)
-%     Pt(i) = t(i) - w(i)*btTw;
-% end
-% PT = P*t;
+v = [1;2;3;4;5;6];
+v = v/norm(v);
+z = v;
+t = ones(length(z),1);
+[w,beta] = householderv(z);
+P = eye(length(z)) - beta*(w*w');
+Pt = zeros(length(z),1);
+btTw = beta*(t'*w);
+for i=1:length(z)
+    Pt(i) = t(i) - w(i)*btTw;
+end
+PT = P*t;
     
 % Arnoldi Householder with optimized storage
 h = [1 3 1;1 3 1;2 6 2;2 6 2;3 8 3;3 8 3];

@@ -92,6 +92,10 @@ To use the Fortran subroutines you must copy the .f files in your fortran projec
 
 ./README.md --> You are standing here
 
+CG, BICGSTAB and GMRES have aditional options for diagonal preconditioning (pc=1), absolute diagonal preconditioning (pc=2), SSOR preconditioning (pc=3, LUv = (Mssor)v, w = (0,2)) and Incomplete-LU(0) (ILU0) preconditioner (pc=4, LUv=(ILU(0))v).
+
+For examples of use, see preconditioned_test.m
+
 ## Meta
 Sergio A. Castiblanco-Ballesteros
 

@@ -44,12 +44,12 @@
 %   a = (r,w)/(Av,w)
 % Where the operator (,) is the inner-product. Now, how to choose v and w?
 %
-% Steepest descend --> v=r   ;   w=r  (Galerki condition using v=r)
+% Steepest descend --> v=r   ;   w=r  (Galerkin condition using v=r)
 % Minimal Residual Iteration --> v=r   ;   w=Ar (Petrov-Galerkin using v=r)
 % Residual Norm Steepest Descendt --> v=A'r   ;   w=Av (Petrov-Galerkin using v=A'r)
 %
 % Conditions over A:
-% Steepest Descend -> A must be non-singular Symmetric Positive Definite.
+% Steepest Descent -> A must be non-singular Symmetric Positive Definite.
 % Minimal Residual Iteration -> A must be non-singular Positive Definite.
 % Residual Norm Steepest Descendt -> A must be non-singular.
 %
